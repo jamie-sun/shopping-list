@@ -1,20 +1,23 @@
-import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
-
-export default async function addShoppingItem(
-  item: string
-): Promise<ShoppingItem[]> {
-  const data = [
-    { id: 1, name: "Apples" },
-    { id: 2, name: "Bananas" },
-    { id: 3, name: "Carrots" },
-  ];
-
-  data.push({ id: 4, name: item });
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("Adding shopping item...");
-      resolve(data);
-    }, 1000);
-  });
+export default async function addShoppingItem(item: string): Promise<string> {
+  try {
+    const response = await fetch(
+      "https://shoppinglist-production-2144.up.railway.app/item",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: item }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error("Error adding shopping item:", error);
+    throw error;
+  }
 }

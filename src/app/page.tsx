@@ -18,18 +18,18 @@ export default function Home() {
     setList(list);
   };
 
-  const addItemErrorHandler = (error: string) => {
+  const addItemErrorHandler = (error: string | null) => {
     setError(error);
   };
 
   // Remove shopping item
-  const removeItemHandler = async (id: number) => {
+  const removeItemHandler = async (id: string) => {
     console.log(`Item with id ${id} removed from the list`);
     setLoading(true);
     setError(null);
     try {
-      const updatedList = await removeShippingItem(id);
-      setList(updatedList);
+      await removeShippingItem(id);
+      setList(list.filter((item) => item.id !== id));
     } catch (err) {
       console.error("Error removing item:", err);
       setError("Failed to remove item");
@@ -40,20 +40,15 @@ export default function Home() {
 
   // Fetch shopping list data
   const fetchData = async () => {
-    fetchShoppingList()
-      .then((data) => {
-        setList(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching shopping list:", err);
-        setError("Failed to fetch shopping list");
-        setLoading(false);
-      })
-      .finally(() => {
-        console.log("Fetch shopping list completed");
-        setLoading(false);
-      });
+    try {
+      const data = await fetchShoppingList();
+      setList(data);
+    } catch (err) {
+      console.error("Error fetching shopping list:", err);
+      setError("Failed to fetch shopping list");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -64,6 +59,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="">shopping list</div>
       <ShoppingInput
+        list={list}
         itemAdded={itemAddedHandler}
         addItemError={addItemErrorHandler}
       />

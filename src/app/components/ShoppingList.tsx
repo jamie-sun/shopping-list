@@ -25,8 +25,8 @@ export default function ShoppingList({
   return (
     <ul className="w-[500px]">
       {list.map((item) => (
-        <li key={item.id} className="flex justify-between items-center p-2 ">
-          {item.name}
+        <li key={item.id} className="flex justify-between items-center p-2">
+          {item.text}
           <button
             className="cursor-pointer"
             onClick={() => removeItem(item.id)}

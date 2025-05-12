@@ -1,19 +1,23 @@
-export interface ShoppingItem {
-  id: number;
-  name: string;
-}
+import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 
 export default async function fetchShoppingList(): Promise<ShoppingItem[]> {
-  const data = [
-    { id: 1, name: "Apples" },
-    { id: 2, name: "Bananas" },
-    { id: 3, name: "Carrots" },
-  ];
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("Fetching shopping list...");
-      resolve(data);
-    }, 1000);
-  });
+  try {
+    const response = await fetch(
+      "https://shoppinglist-production-2144.up.railway.app/list",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching shopping list:", error);
+    throw error;
+  }
 }

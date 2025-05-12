@@ -3,11 +3,13 @@ import addShoppingItem from "@/app/lib/api/addShoppingItem";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 
 interface ShoppingInputProps {
+  list: ShoppingItem[];
   itemAdded: (list: ShoppingItem[]) => void;
   addItemError: (error: string | null) => void;
 }
 
 export default function ShoppingInput({
+  list,
   itemAdded,
   addItemError,
 }: ShoppingInputProps) {
@@ -19,7 +21,12 @@ export default function ShoppingInput({
     setLoading(true);
     addItemError(null);
     try {
-      const updatedList = await addShoppingItem(item);
+      const newItem = await addShoppingItem(item);
+      const newItemFormatted = {
+        id: newItem,
+        text: item,
+      };
+      const updatedList = [...list, newItemFormatted];
       setItem("");
       itemAdded(updatedList);
     } catch (err) {
