@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 
 import ShoppingInput from "@/app/components/ShoppingInput";
 import ShoppingList from "@/app/components/ShoppingList";
-import fetchShoppingList from "@/app/lib/api/fetchShoppingList";
-import removeShippingItem from "@/app/lib/api/removeShoppingItem";
+import { fetchShoppingList } from "@/app/lib/api/api";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 
 export default function Home() {
   const [list, setList] = useState<ShoppingItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Add shopping item
@@ -18,36 +17,23 @@ export default function Home() {
     setList(list);
   };
 
-  const addItemErrorHandler = (error: string | null) => {
-    setError(error);
-  };
-
   // Remove shopping item
-  const removeItemHandler = async (id: string) => {
+  const removeItemIDHandler = async (id: string) => {
     console.log(`Item with id ${id} removed from the list`);
-    setLoading(true);
-    setError(null);
-    try {
-      await removeShippingItem(id);
-      setList(list.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error("Error removing item:", err);
-      setError("Failed to remove item");
-    } finally {
-      setLoading(false);
-    }
+    setList(list.filter((item) => item.id !== id));
   };
 
   // Fetch shopping list data
   const fetchData = async () => {
     try {
       const data = await fetchShoppingList();
+      console.log("Fetched shopping list data:", data);
       setList(data);
     } catch (err) {
       console.error("Error fetching shopping list:", err);
-      setError("Failed to fetch shopping list");
+      setError("Failed to load shopping list");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -61,13 +47,13 @@ export default function Home() {
       <ShoppingInput
         list={list}
         itemAdded={itemAddedHandler}
-        addItemError={addItemErrorHandler}
+        addItemError={() => setError(error)}
       />
       <ShoppingList
         list={list}
-        loading={loading}
+        isLoading={isLoading}
         error={error}
-        removeItem={removeItemHandler}
+        removeItemID={removeItemIDHandler}
       />
     </div>
   );

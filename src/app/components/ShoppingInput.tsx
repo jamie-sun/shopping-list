@@ -1,8 +1,8 @@
 import { useState } from "react";
-import addShoppingItem from "@/app/lib/api/addShoppingItem";
+import { addShoppingItem } from "@/app/lib/api/api";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 
-interface ShoppingInputProps {
+interface Props {
   list: ShoppingItem[];
   itemAdded: (list: ShoppingItem[]) => void;
   addItemError: (error: string | null) => void;
@@ -12,28 +12,30 @@ export default function ShoppingInput({
   list,
   itemAdded,
   addItemError,
-}: ShoppingInputProps) {
+}: Props) {
   const [item, setItem] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addItemHandler = async () => {
     console.log(`Adding item: ${item}`);
-    setLoading(true);
+    setIsLoading(true);
     addItemError(null);
     try {
-      const newItem = await addShoppingItem(item);
-      const newItemFormatted = {
-        id: newItem,
+      const addedItemResponse = await addShoppingItem(item);
+      const addedItemID = addedItemResponse.id;
+      const addedItem = {
+        id: addedItemID,
         text: item,
+        completed: false,
       };
-      const updatedList = [...list, newItemFormatted];
+      const updatedList = [...list, addedItem];
       setItem("");
       itemAdded(updatedList);
     } catch (err) {
       console.error("Error adding item:", err);
       addItemError("Failed to add item");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -48,8 +50,8 @@ export default function ShoppingInput({
             setItem(event.target.value);
           }}
         />
-        <button disabled={loading || !item.trim()} onClick={addItemHandler}>
-          {loading ? "adding" : "add"}
+        <button disabled={isLoading || !item.trim()} onClick={addItemHandler}>
+          {isLoading ? "adding" : "add"}
         </button>
       </div>
     </div>

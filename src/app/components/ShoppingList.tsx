@@ -1,21 +1,22 @@
 import React from "react";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
+import ShoppingListItem from "@/app/components/ShoppingListItem";
 
-interface ShoppingListProps {
+interface Props {
   list: ShoppingItem[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
-  removeItem: (id: number) => void;
+  removeItemID: (id: string) => void;
 }
 
 export default function ShoppingList({
   list,
-  loading,
+  isLoading,
   error,
-  removeItem,
-}: ShoppingListProps) {
-  if (loading) {
-    return <div>Loading...</div>;
+  removeItemID,
+}: Props) {
+  if (isLoading) {
+    return <div>isLoading...</div>;
   }
 
   if (error) {
@@ -25,15 +26,11 @@ export default function ShoppingList({
   return (
     <ul className="w-[500px]">
       {list.map((item) => (
-        <li key={item.id} className="flex justify-between items-center p-2">
-          {item.text}
-          <button
-            className="cursor-pointer"
-            onClick={() => removeItem(item.id)}
-          >
-            x
-          </button>
-        </li>
+        <ShoppingListItem
+          key={item.id}
+          item={item}
+          onRemoveItemID={removeItemID}
+        />
       ))}
     </ul>
   );
