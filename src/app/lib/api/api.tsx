@@ -37,3 +37,9 @@ export const removeShoppingItem = (id: string) => {
   config.method = "DELETE";
   return fetchJSON(`${baseUrl}/item/${id}`, config);
 };
+
+export const updateCompletedItem = (id: string) => {
+  let config = getDefaultApiConfig();
+  config.method = "PUT";
+  return fetchJSON(`${baseUrl}/item/${id}`, config);
+};

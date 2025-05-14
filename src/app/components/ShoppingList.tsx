@@ -1,5 +1,6 @@
 import React from "react";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
+import { SpinnerIcon } from "@/app/icons/icons";
 import ShoppingListItem from "@/app/components/ShoppingListItem";
 
 interface Props {
@@ -16,7 +17,11 @@ export default function ShoppingList({
   removeItemID,
 }: Props) {
   if (isLoading) {
-    return <div>isLoading...</div>;
+    return (
+      <div className="m-auto">
+        <SpinnerIcon className="h-[30px] w-[30px]" />
+      </div>
+    );
   }
 
   if (error) {
@@ -24,7 +29,7 @@ export default function ShoppingList({
   }
 
   return (
-    <ul className="w-[500px]">
+    <ul className="max-w-[500px] w-full overflow-y-auto">
       {list.map((item) => (
         <ShoppingListItem
           key={item.id}

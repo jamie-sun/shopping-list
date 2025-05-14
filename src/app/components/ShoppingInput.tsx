@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addShoppingItem } from "@/app/lib/api/api";
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
+import { SpinnerIcon } from "@/app/icons/icons";
 
 interface Props {
   list: ShoppingItem[];
@@ -50,8 +51,12 @@ export default function ShoppingInput({
             setItem(event.target.value);
           }}
         />
-        <button disabled={isLoading || !item.trim()} onClick={addItemHandler}>
-          {isLoading ? "adding" : "add"}
+        <button
+          className={`${isLoading || !item.trim() ? "" : "cursor-pointer"}`}
+          disabled={isLoading || !item.trim()}
+          onClick={addItemHandler}
+        >
+          {isLoading ? <SpinnerIcon /> : "add"}
         </button>
       </div>
     </div>

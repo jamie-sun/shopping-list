@@ -42,7 +42,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col gap-5 items-center m-auto p-10 w-[90%] max-w-[500px] h-[60vh] font-[family-name:var(--font-geist-sans)] rounded-3xl shadow-md">
       <div className="">shopping list</div>
       <ShoppingInput
         list={list}
