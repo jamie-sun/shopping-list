@@ -8,38 +8,33 @@ const fetchJSON = async (url: string, config: RequestInit) => {
   return response.json();
 };
 
-const getDefaultApiConfig = () => {
-  return JSON.parse(
-    JSON.stringify({
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-  );
-};
+const getDefaultApiConfig = () => ({
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
 
 export const fetchShoppingList = () => {
-  let config = getDefaultApiConfig();
-  config.method = "GET";
+  const config = { ...getDefaultApiConfig(), method: "GET" };
   return fetchJSON(`${baseUrl}/list`, config);
 };
 
 export const addShoppingItem = (item: string) => {
-  let config = getDefaultApiConfig();
-  config.method = "POST";
-  config.body = JSON.stringify({ text: item });
+  const config = {
+    ...getDefaultApiConfig(),
+    method: "POST",
+    body: JSON.stringify({ text: item }),
+  };
   return fetchJSON(`${baseUrl}/item`, config);
 };
 
 export const removeShoppingItem = (id: string) => {
-  let config = getDefaultApiConfig();
-  config.method = "DELETE";
+  const config = { ...getDefaultApiConfig(), method: "DELETE" };
   return fetchJSON(`${baseUrl}/item/${id}`, config);
 };
 
 export const updateCompletedItem = (id: string) => {
-  let config = getDefaultApiConfig();
-  config.method = "PUT";
+  const config = { ...getDefaultApiConfig(), method: "PUT" };
   return fetchJSON(`${baseUrl}/item/${id}`, config);
 };
