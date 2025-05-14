@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "motion/react";
 
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 import { removeShoppingItem } from "@/app/lib/api/api";
