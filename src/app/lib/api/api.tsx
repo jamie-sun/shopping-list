@@ -34,7 +34,15 @@ export const removeShoppingItem = (id: string) => {
   return fetchJSON(`${baseUrl}/item/${id}`, config);
 };
 
-export const updateCompletedItem = (id: string) => {
-  const config = { ...getDefaultApiConfig(), method: "PUT" };
+export const updateCompletedItem = (
+  id: string,
+  item: string,
+  check: boolean
+) => {
+  const config = {
+    ...getDefaultApiConfig(),
+    method: "PUT",
+    body: JSON.stringify({ text: item, completed: check }),
+  };
   return fetchJSON(`${baseUrl}/item/${id}`, config);
 };
