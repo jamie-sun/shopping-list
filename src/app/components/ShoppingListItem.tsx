@@ -27,6 +27,7 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
     check: boolean
   ) => {
     console.log(`Item with id ${id} toggled`);
+    setError(null);
     setIsLoadingChecked(true);
     try {
       const reponse = await updateCompletedItem(id, text, check);
@@ -34,6 +35,7 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
       setIsCompleted(!isCompleted);
     } catch (err) {
       console.error("Error updating checked item:", err);
+      setError("Failed to update completed status");
     } finally {
       setIsLoadingChecked(false);
     }
