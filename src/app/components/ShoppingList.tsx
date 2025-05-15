@@ -49,8 +49,8 @@ export default function ShoppingList({
           Retry
         </button>
         <p className="text-xs w-[80%] opacity-50 text-center">
-          Note: due to the free version of Railway :'( , the server needs to
-          wake up after long periods of inactivity.
+          Note: due to the free version of Railway {" :'( "} , the server needs
+          to wake up after long periods of inactivity.
         </p>
       </div>
     );
