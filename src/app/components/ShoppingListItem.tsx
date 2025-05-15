@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import { ShoppingItem } from "@/app/lib/types/ShoppingItem";
 import { removeShoppingItem, updateCompletedItem } from "@/app/lib/api/api";
@@ -13,6 +14,17 @@ interface Props {
   item: ShoppingItem;
   onRemoveItemID: (id: string) => void;
 }
+
+const itemVariant = {
+  hidden: { opacity: 0, x: -20 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.1,
+    },
+  },
+};
 
 export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
@@ -30,12 +42,12 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
     setError(null);
     setIsLoadingChecked(true);
     try {
-      const reponse = await updateCompletedItem(id, text, check);
-      console.log(reponse);
+      const response = await updateCompletedItem(id, text, check);
+      console.log(response);
       setIsCompleted(!isCompleted);
     } catch (err) {
       console.error("Error updating checked item:", err);
-      setError("Failed to update completed status");
+      setError("Failed to update checked item");
     } finally {
       setIsLoadingChecked(false);
     }
@@ -59,13 +71,16 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
 
   return (
     <>
-      <li
-        className="flex items-center p-2 cursor-pointer bg-white hover:bg-gray-100"
+      <motion.li
+        variants={itemVariant}
+        className="flex items-center p-2 cursor-pointer rounded-lg transition duration-300"
         onClick={() => {
           toggleCheckedHandler(item.id, item.text, !item.completed);
         }}
       >
-        <div
+        <motion.div
+          animate={{ rotate: isCompleted ? 360 : 270 }}
+          transition={{ duration: 0.1 }}
           className={`${isCompleted ? "line-through opacity-50" : ""} mr-2.5`}
         >
           {isLoadingChecked ? (
@@ -75,15 +90,15 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
           ) : (
             <UncheckedIcon />
           )}
-        </div>
-        <div
+        </motion.div>
+        <span
           className={`${isCompleted ? "line-through opacity-50" : ""} w-full`}
         >
           {item.text}
-        </div>
+        </span>
         <button
           disabled={isLoadingDelete}
-          className="cursor-pointer"
+          className={`${!isLoadingDelete && "hover:text-red-500"} cursor-pointer scale-80 hover:scale-100 p-1 transition-transform duration-300`}
           onClick={(e) => {
             e.stopPropagation();
             removeItemHandler(item.id);
@@ -91,8 +106,8 @@ export default function ShoppingListItem({ item, onRemoveItemID }: Props) {
         >
           {isLoadingDelete ? <SpinnerIcon /> : <DeleteIcon />}
         </button>
-      </li>
-      {error && <div className="text-red-500">{error}</div>}
+      </motion.li>
+      {error && <div className="text-red-500 text-sm">{error}</div>}
     </>
   );
 }
